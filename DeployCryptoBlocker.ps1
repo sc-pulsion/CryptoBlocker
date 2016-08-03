@@ -14,6 +14,7 @@
 
 # Filters to exclude
 # e.g. "*.enc*", "*.777", "*.encrypted"
+$excludeFilters = "*.enc*"
 
 
 Function PurgeNonAdminDirectoryPermissions([string] $directory)
@@ -98,6 +99,9 @@ $fileScreenName = "CryptoBlockerScreen"
 $webClient = New-Object System.Net.WebClient
 $jsonStr = $webClient.DownloadString("https://fsrm.experiant.ca/api/v1/get")
 [System.Collections.ArrayList]$monitoredExtensions = @(ConvertFrom-Json20($jsonStr) | % { $_.filters })
+foreach ($excludeFilter in $excludeFilters) { 
+	$monitoredExtensions.Remove($excludeFilter)
+}
 
 $scriptFilename = "C:\FSRMScripts\KillUserSession.ps1"
 $batchFilename = "C:\FSRMScripts\KillUserSession.bat"
